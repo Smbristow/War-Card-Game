@@ -1,6 +1,5 @@
 /*-------------------------------- Constants --------------------------------*/
-const SUITS = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
+const RANKS = 
 const NUM_PLAYERS = 2
 const CARDS_PER_PLAYER = 26
 const CARD_VALUES = {
@@ -32,3 +31,14 @@ let playerDeck1, playerDeck2, player1Card, player2Card, warPile, isGameRunning, 
 
 
 /*-------------------------------- Functions --------------------------------*/
+function createDeck() {
+  const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
+  const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
+  const deck = []
+
+  for (const suit of suits) {
+    for (const rank of ranks) {
+      deck.push({ suit, rank })
+    }
+  }
+}
