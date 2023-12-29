@@ -1,5 +1,4 @@
 /*-------------------------------- Constants --------------------------------*/
-const RANKS = 
 const NUM_PLAYERS = 2
 const CARDS_PER_PLAYER = 26
 const CARD_VALUES = {
@@ -40,5 +39,13 @@ function createDeck() {
     for (const rank of ranks) {
       deck.push({ suit, rank })
     }
+  }
+  return deck
+}
+
+function shuffleDeck (deck) {
+  for (let i = deck.length - 1; i > 0; i--){
+    const j = math.floor(math.random() * (i + 1))
+    [deck[i], deck [j] = deck[j], deck[i]]
   }
 }
