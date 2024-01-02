@@ -63,15 +63,20 @@ for(let i = 0; i < 26; i++) {
 console.log(player1)
 console.log(player2)
 
-function (card1, card2) {
-  const rank1 = ranks.indexOf(cards.slice(0, -1))
-  const rank1 = ranks.indexOf(cards.slice(0, -1))
+function compareCards(card1, card2) {
+  const rank1 = ranks.indexOf(card1.slice(0, -1))
+  const rank2 = ranks.indexOf(card2.slice(0, -1))
   if (rank1 > rank2) {
-    'player1'
+    return 'player1'
   } else if (rank1 < rank2) {
     return 'player2'
   } else {
     return 'tie'
   }
+}
+
+for (let i = 0; i < 26; i++) {
+ const card1 = player1[i]
+ const card2 = player2[i]
 }
 
