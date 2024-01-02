@@ -65,33 +65,56 @@ function playRound() {
 }
 
 function compareCards(card1, card2) {
-  const cardValue1 = cards.indexOf(card1.split(' ')[0])
-  const cardValue2 = cards.indexOf(card2.split(' ')[0])
+  const values = { '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14 };
+  const value1 = values[card1.split(' ')[0]]
+  const value2 = values[card2.split(' ')[0]]
 
-  if (cardValue1 > cardValue2) {
-    resultDisplay.innerHTML = `Player 1 wins!`
-    player1Deck = player1Deck.concat(player1Pile, player2Pile)
+
+  if (value1 > value2) {
+    player1Deck.push(card1, card2, ...player1Pile, ...player2Pile)
     player1Pile = []
     player2Pile = []
-  } else if (cardValue2 > cardValue1) {
-    resultDisplay.innerHTML = `Player 2 wins!`
-    player1Deck = player1Deck.concat(player1Pile, player2Pile)
+  } else if (value2 > value1) {
+    player2Deck.push(card1, card2, ...player1Pile, ...player2Pile)
     player1Pile = []
     player2Pile = []
     } else {
       resultDisplay.innerHTML = 'War declared!'
-      if (player1Deck.length < 4 || player2Deck < 4) {
+      if (player1Deck.length < 2 || player2Deck.length < 2) {
         endGame()
         return
       }
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 2; i++) {
         player1Pile.unshift(player1Deck.pop())
         player2Pile.unshift(player2Deck.pop())
       }
       playRound()
     }
-}
 
+    resultDisplay.innerHTML = `War!`
+
+    const warCardsPlayer1 = player1Deck.splice(player1Deck.length - 2)
+    const warCardsPlayer2 = player2Deck.splice(player2Deck.length - 2)
+
+    const faceDownCard1 = warCardsPlayer1[0]
+    const faceUpCard1 = warCardsPlayer1[1]
+    const faceDownCard2 = warCardsPlayer2[0]
+    const faceUpCard2 = warCardsPlayer2[1]
+    
+    player1Pile.unshift(faceDownCard1, faceUpCard1)
+    player2Pile.unshift(faceDownCard2, faceUpCard2)
+    
+    playRound()
+    
+    if (player1Deck.length === 0) {
+      resultDisplay.innerHTML = `Player 2 wins!`
+    } else if (player2Deck.length === 0) {
+      resultDisplay.innerHTML = `Player 1 wins!`
+    } else {
+      playRound()
+    }
+  }
+    
 
 //  function createDeck() {
 //   const suits = ['hearts' , 'Diamonds' , 'Clubs' , 'Spades']
