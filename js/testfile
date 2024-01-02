@@ -1,0 +1,109 @@
+// Function to create a deck of cards
+function createDeck() {
+  const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+  const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+  const deck = [];
+
+  for (const suit of suits) {
+    for (const rank of ranks) {
+      deck.push({ rank, suit });
+    }
+  }
+
+  return deck;
+}
+
+// Function to shuffle the deck
+function shuffleDeck(deck) {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+}
+
+// Function to deal cards to players
+function dealCards(deck, player1, player2) {
+  while (deck.length > 0) {
+    player1.push(deck.pop());
+    player2.push(deck.pop());
+  }
+}
+
+// Function to play the game
+function playWar(player1, player2) {
+  while (player1.length > 0 && player2.length > 0) {
+    const card1 = player1.shift();
+    const card2 = player2.shift();
+
+    console.log(`Player 1 plays: ${card1.rank} of ${card1.suit}`);
+    console.log(`Player 2 plays: ${card2.rank} of ${card2.suit}`);
+
+    if (card1.rank > card2.rank) {
+      console.log('Player 1 wins this round!');
+      player1.push(card1, card2);
+    } else if (card1.rank < card2.rank) {
+      console.log('Player 2 wins this round!');
+      player2.push(card1, card2);
+    } else {
+      console.log('WAR!');
+      const warCards1 = [card1];
+      const warCards2 = [card2];
+
+      // Deal two more cards for the war if players have enough cards
+      if (player1.length >= 2 && player2.length >= 2) {
+        warCards1.push(player1.shift(), player1.shift());
+        warCards2.push(player2.shift(), player2.shift());
+      }
+
+      const result = compareForWar(player1, player2, warCards1, warCards2);
+
+      if (result === 1) {
+        player1.push(...warCards1, ...warCards2);
+        console.log('Player 1 wins the war!');
+      } else if (result === 2) {
+        player2.push(...warCards1, ...warCards2);
+        console.log('Player 2 wins the war!');
+      } else {
+        console.log('It\'s a tie in the war!');
+      }
+    }
+  }
+
+  if (player1.length === 0) {
+    console.log('Player 2 wins the game!');
+  } else {
+    console.log('Player 1 wins the game!');
+  }
+}
+
+// Function to compare cards during a war
+function compareForWar(player1, player2, cards1, cards2) {
+  const card1 = player1.shift();
+  const card2 = player2.shift();
+
+  cards1.push(card1);
+  cards2.push(card2);
+
+  if (card1.rank > card2.rank) {
+    return 1;
+  } else if (card1.rank < card2.rank) {
+    return 2;
+  } else {
+    if (player1.length < 2 || player2.length < 2) {
+      return 0; // Not enough cards for another war
+    } else {
+      return compareForWar(player1, player2, cards1, cards2); // Recursive call for another war
+    }
+  }
+}
+
+// Initializing the game
+const deck = createDeck();
+shuffleDeck(deck);
+
+const player1 = [];
+const player2 = [];
+
+dealCards(deck, player1, player2);
+
+playWar(player1, player2);
