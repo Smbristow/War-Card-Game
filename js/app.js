@@ -1,10 +1,7 @@
 /*-------------------------------- Constants --------------------------------*/
 const numPlayers = 2
 const cardsPerPlayer = 26
-const cardValues = {
-  '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10,
-  'Jack': 11, 'Queen': 12, 'King': 13, 'Ace': 14
-}
+
 const gameMessages = {
   welcome: 'Welcome to the game of War!',
   roundWinner: 'Player %d wins this round!',
@@ -30,46 +27,38 @@ let playerDeck1, playerDeck2, player1Card, player2Card, warPile, isGameRunning, 
 
 
 /*-------------------------------- Functions --------------------------------*/
-function createDeck() {
   const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
   const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
-  const deck = []
 
-  for (const suit of suits) {
-    for (const rank of ranks) {
-      deck.push({ suit, rank })
-    }
-  }
-  return deck
-}
 
-function shuffleDeck (deck) {
-  for (let i = deck.length - 1; i > 0; i--){
-    const j = math.floor(math.random() * (i + 1))
-    [deck[i], deck [j] = deck[j], deck[i]]
-  }
-}
-
-function dealCards(deck, numPlayers, cardsPerPlayer) {
-  const players = []
-  for (let i = 0; i < numPlayers; i++) {
-    players.push([])
-  }
-  
-  for (let i = 0; i < cardsPerPlayer; i++) {
-    for (let j = 0; j < numPlayers; j++) {
-      players[j].push(deck.pop())
+let deck = []
+for (let suit of suits) {
+    for (let rank of ranks) {
+      deck.push(rank + suit)
     }
   }
 
-  return players; 
-
-}
-
-function startGame(numPlayers, cardsPerPlayer) {
-  const deck = createDeck()
+function shuffleDeck(deck) {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i +1))
+    [deck[i], deck[j]] = [deck[j], deck[i]]
+  }
   shuffleDeck(deck)
-  const players = dealCards(deck, numPlayers, cardsPerPlayer)
-
-  return players
 }
+
+
+
+function dealCards(){
+  return deck.pop()
+}
+
+let player1 = []
+let player2 = []
+
+for(let i = 0; i < 26; i++) {
+  player1.push(dealCards())
+  player2.push(dealCards())
+}
+
+console.log(player1)
+console.log(player2)
