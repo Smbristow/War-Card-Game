@@ -1,17 +1,59 @@
 /*-------------------------------- Constants --------------------------------*/
-
+const suits = ["♠", "♣", "♥", "♦"]
+const values = [
+  "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"
+];
 /*---------------------------- Variables (state) ----------------------------*/
-const cards = ["dA","dQ","dK","dJ","d10","d09","d08","d07","d06","d05","d04","d03","d02","hA","hQ","hK","hJ","h10","h09","h08","h07","h06","h05","h04","h03","h02","cA","cQ","cK","cJ","c10","c09","c08","c07","c06","c05","c04","c03","c02","sA","sQ","sK","sJ","s10","s09","s08","s07","s06","s05","s04","s03","s02"]
-const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-let player1Deck, player2Deck 
-let player1Pile, player2Pile
+class deck {
+  constructor(cards = freshDeck()) {
+    this.card = cards
+  }
 
+  get numberOfCards() {
+    return this.cards.length
+  }
+
+  pop() {
+    return this.cards.shift()
+  }
+
+  push(card) {
+    return this.cards.shift()
+  }
+
+  push(card) {
+    this.cards.push(card)
+  }
+
+  shuffle() {
+    for (let i = this.numberOfCards - 1; i > 0; i--) {
+      const newIndex = Math.floor(Math.random() * (i + 1))
+      [this.cards[i], this.cards[newIndex]] = [this.cards[newIndex], this.cards[i]]
+    }
+  }
+}
+
+
+class Card {
+  constructor(suit, value) {
+    this.suit = suit
+    this.value = value
+  }
+
+  get color() {
+    return this.suit === "♣" || this.suit === "♠" ? "black" : "red";
+  }
+
+  getHTML() {
+    const cardDiv = document.createElement("div")
+    cardDiv.innerText = this.suit
+    cardDiv.classList.add("card", this.color)
+    cardDiv.dataset.value = `${this.value} ${this.suit}`
+    return cardDiv
+  }
+}
 
 /*------------------------ Cached Element References ------------------------*/
-const player1CardDiv = document.getElementById('player1Card')
-const player2CardDiv = document.getElementById('player2Card')
-const playButton = document.getElementById('playButton')
-const resultDisplay = document.getElementById('result')
 
 
 /*----------------------------- Event Listeners -----------------------------*/
