@@ -155,34 +155,53 @@ function flipCards() {
   }
   
   function initiateWar() {
-    const player2Cards = player2Deck.popMultiple(2);
-    const player1Cards = player1Deck.popMultiple(2);
-  
-    player2Cards.forEach(card => player2CardSlot.appendChild(card.getHTML()));
-    player1Cards.forEach(card => player1CardSlot.appendChild(card.getHTML()));
-  
-    const player2LastCard = player2Cards[player2Cards.length - 1];
-    const player1LastCard = player1Cards[player1Cards.length - 1];
-  
-    if (player2LastCard && player1LastCard) {
-      if (isRoundWinner(player2LastCard, player1LastCard)) {
-        text.innerText = "Player 2 Wins the War!";
-        player2Deck.push(...player2Cards);
-        player2Deck.push(...player1Cards);
-      } else if (isRoundWinner(player1LastCard, player2LastCard)) {
-        text.innerText = "Player 1 Wins the War!";
-        player1Deck.push(...player2Cards);
-        player1Deck.push(...player1Cards);
-      } else {
-        text.innerText = "Another War!";
-        initiateWar();
-      }
+  const player2Cards = player2Deck.popMultiple(2);
+  const player1Cards = player1Deck.popMultiple(2);
+
+  if (player2Cards.length === 0 || player1Cards.length === 0) {
+    return; // If a player runs out of cards during war, end the game
+  }
+
+  player2Cards.forEach(card => player2CardSlot.appendChild(card.getHTML()));
+  player1Cards.forEach(card => player1CardSlot.appendChild(card.getHTML()));
+
+  const player2LastCard = player2Cards[player2Cards.length - 1];
+  const player1LastCard = player1Cards[player1Cards.length - 1];
+
+  const warCards = [...player2Cards, ...player1Cards];
+
+  if (player2LastCard && player1LastCard) {
+    const player2LastValue = CARD_VALUE_MAP[player2LastCard.value];
+    const player1LastValue = CARD_VALUE_MAP[player1LastCard.value];
+
+    if (player2LastValue > player1LastValue) {
+      text.innerText = "Player 2 Wins the War!";
+      player2Deck.cards.push(...warCards); 
+    } else if (player1LastValue > player2LastValue) {
+      text.innerText = "Player 1 Wins the War!";
+      player1Deck.cards.push(...warCards); 
+    } else {
+      text.innerText = "Another War!";
+      initiateWar(); 
     }
   }
+}
+
   
-  Deck.prototype.popMultiple = function (count) {
-    return Array.from({ length: count }, () => this.pop()).filter(Boolean);
-  };
+  
+Deck.prototype.popMultiple = function(count) {
+  const poppedCards = [];
+  for (let i = 0; i < count; i++) {
+    const card = this.pop();
+    if (card) {
+      poppedCards.push(card);
+    } else {
+      break; 
+    }
+  }
+  return poppedCards;
+};
+
 
 function updateDeckCount() {
   player1DeckElement.innerText = player1Deck.numberOfCards; 
