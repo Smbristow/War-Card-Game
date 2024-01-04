@@ -45,12 +45,14 @@ body {
   }
 
   .card {
-    position: relative;
+  position: relative;
   height: 112px;
   width: 64px;
   border: 1ps solid black;
+  background-color: white;
   border-radius: 8px;
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   font-size: 64px;

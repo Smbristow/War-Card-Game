@@ -32,18 +32,34 @@ class Card {
   constructor(suit, value) {
     this.suit = suit;
     this.value = value;
+    this.cardElement = this.createCardElement();
+    this.flipped = false;
+
+    const self = this;
+    this.cardElement.addEventListener('click', function() {
+      self.toggleFlip();
+    });
   }
 
   get color() {
     return this.suit === "♣" || this.suit === "♠" ? "black" : "red";
   }
 
-  getHTML() {
+  createCardElement() {
     const cardDiv = document.createElement("div");
     cardDiv.innerText = this.suit;
     cardDiv.classList.add("card", this.color);
     cardDiv.dataset.value = `${this.value} ${this.suit}`;
     return cardDiv;
+  }
+
+  toggleFlip() {
+    this.flipped = !this.flipped;
+    this.cardElement.classList.toggle('flipped');
+  }
+
+  getHTML() {
+    return this.cardElement;
   }
 }
 
@@ -117,11 +133,11 @@ function flipCards() {
     updateDeckCount();
   
     if (isRoundWinner(player2Card, player1Card)) {
-      text.innerText = "Win";
+      text.innerText = "Player 1 Win";
       player2Deck.push(player2Card);
       player2Deck.push(player1Card);
     } else if (isRoundWinner(player1Card, player2Card)) {
-      text.innerText = "Lose";
+      text.innerText = "Player 2 Win";
       player1Deck.push(player2Card);
       player1Deck.push(player1Card);
     } else {
@@ -179,4 +195,14 @@ function isRoundWinner(cardOne, cardTwo) {
 
 function isGameOver(deck) {
   return deck.numberOfCards === 0;
+}
+
+const resetButton = document.querySelector(".reset-button");
+resetButton.addEventListener("click", function() {
+  resetGame();
+});
+
+function resetGame() {
+  stop = false;
+  startGame();
 }
