@@ -76,13 +76,13 @@ const CARD_VALUE_MAP = {
   "10": 10, "J": 11, "Q": 12, "K": 13, "A": 14
 };
 
-const player1CardSlot = document.querySelector(".player1-card-slot"); // Updated variable name
+const player1CardSlot = document.querySelector(".player1-card-slot"); 
 const player2CardSlot = document.querySelector(".player2-card-slot");
-const player1DeckElement = document.querySelector(".player1-deck"); // Updated variable name
+const player1DeckElement = document.querySelector(".player1-deck"); 
 const player2DeckElement = document.querySelector(".player2-deck");
 const text = document.querySelector(".text");
 
-let player2Deck, player1Deck, inRound, stop; // Updated variable names
+let player2Deck, player1Deck, inRound, stop;
 
 document.addEventListener("click", () => {
   if (stop) {
@@ -133,11 +133,11 @@ function flipCards() {
     updateDeckCount();
   
     if (isRoundWinner(player2Card, player1Card)) {
-      text.innerText = "Player 1 Win";
+      text.innerText = "Player 1 wins the battle.";
       player2Deck.push(player2Card);
       player2Deck.push(player1Card);
     } else if (isRoundWinner(player1Card, player2Card)) {
-      text.innerText = "Player 2 Win";
+      text.innerText = "Player 2 wins the battle.";
       player1Deck.push(player2Card);
       player1Deck.push(player1Card);
     } else {
@@ -185,7 +185,7 @@ function flipCards() {
   };
 
 function updateDeckCount() {
-  player1DeckElement.innerText = player1Deck.numberOfCards; // Updated variable name
+  player1DeckElement.innerText = player1Deck.numberOfCards; 
   player2DeckElement.innerText = player2Deck.numberOfCards;
 }
 
