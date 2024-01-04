@@ -4,7 +4,7 @@ const values = [
   "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"
 ];
 /*---------------------------- Variables (state) ----------------------------*/
-class deck {
+class Deck {
   constructor(cards = freshDeck()) {
     this.card = cards
   }
@@ -53,80 +53,139 @@ class Card {
   }
 }
 
-/*------------------------ Cached Element References ------------------------*/
-
-
-/*----------------------------- Event Listeners -----------------------------*/
-
-document.getElementById('play-round-btn').addEventListener('click', playRound);
-
-/*-------------------------------- Functions --------------------------------*/
-init()
-
-function init() {
-  player1Deck = createDeck()
-  player2Deck = createDeck()
-  player1Pile = []
-  player2Pile = []
-  shuffleDeck(player1Deck)
-  shuffleDeck(player2Deck)
+function freshDeck() {
+  return suits.flatMap(function(suit) {
+    return values.map(function(value) {
+      return new Card(suit, value)
+    })
+  })
 }
 
-function createDeck() {
-  const deck = []
-  for (const card of cards) {
-    for (const suit of suits) {
-      deck.push(`${card} of ${suit}`)
-    }
+const cardValueMap = {
+  "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 11, "Q": 12, "K": 13, "A": 14
+}
+
+const player1CardSlot = document.querySelector(".player1-card-slot"); 
+const player2CardSlot = document.querySelector(".player2-card-slot");
+const player1DeckElement = document.querySelector(".player1-deck"); 
+const player2DeckElement = document.querySelector(".player2-deck");
+const text = document.querySelector(".text");
+
+let player2Deck, player1Deck, inRound, stop;
+
+document.addEventListener("click", function() {
+  if (stop) {
+    startGame();
+    return;
   }
-  return deck
-}
-
-function shuffleDeck(deck) {
-  for (let i = deck.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    const temp = deck[i]
-    deck[i] = deck[j]
-    deck[j] = temp
-  }
-}
-
-function playRound() {
-  console.log('Play Round function executed')
-  if (player1Deck.length === 0 || player2Deck.length === 0) {
-    return  
-  }
-  const player1Card = player1Deck.pop()
-  const player2Card = player2Deck.pop()
-  
-  player1Pile.unshift(player1Card)
-  player2Pile.unshift(player2Card)
-  
-  compareCards(player1Card, player2Card)
-}
-
-function compareCards(card1, card2) {
-  console.log('Compare Cards function executed')
-  const values = { '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14 };
-  const value1 = values[card1.split('')[1]]
-  const value2 = values[card2.split('')[1]]
-
-  if (value1 > value2) {
-    player1Deck.unshift(...player1Pile, ...player2Pile, card1, card2)
-    player1Pile = []
-    player2Pile = []
-  } else if (value2 > value1) {
-    player2Deck.unshift(...player1Pile, ...player2Pile, card1, card2)
-    player1Pile = []
-    player2Pile = []
+  if (inRound) {
+    cleanBeforeRound();
   } else {
-    if (player1Deck.length < 2 || player2Deck.length < 2) {
-      return
-    }
-    for (let i = 0; i < 2; i++) {
-      player1Pile.unshift(player1Deck.pop())
-      player2Pile.unshift(player2Deck.pop())
-    }
-    playRound()
+    flipCards();
   }
+});
+
+startGame()
+
+function startGame() {
+  const deck = new Deck()
+  deck.shuffle()
+
+  const deckMidpoint = Math.ceil(deck.numberOfCards / 2)
+  player1Deck = new Deck(deck.cards.slice(0, deckMidpoint))
+  player2Deck = new Deck(deck.cards.slice(deckMidpoint, deck.numberOfCards))
+  inRound = false
+  stop = false
+
+  cleanBeforeRound()
+}
+
+function cleanBeforeRound() {
+  inRound = false
+  player1CardSlot.innerHTML = ""
+  player2CardSlot.innerHTML = ""
+  text.innerText = ""
+
+  updateDeckCount()
+}
+
+function flipCards() {
+  inRound = true
+
+const player1Card = player1Deck.pop()
+const player2Card = player2Deck.pop()
+
+player1CardSlot.appendChild(player1Card.getHTML())
+player2CardSlot.appendChild(player2Card.getHTML())
+
+updateDeckCount()
+
+if (isRoundWinner(player1Card, player2Card)) {
+  text.innerText = "Player 1 Wins!"
+  player1Deck.push(player2Card)
+  player1Deck.push(player1Card)
+  } else if (isRoundWinner(player2Card, player1Card)) {
+    text.innerText = "Player 2 Wins!"
+    player2Deck.push(player1Card)
+    player2Deck.push(player2Card)
+    } else {
+      text.innerText = "War!"
+      initiateWar()
+    }
+
+    if (isGameOver(player1Deck)) {
+      text.innerHTML = "Player 1 Wins the game!!!"
+      stop = true
+    } else if (isGameOver(player1Deck)) {
+      text.innerText = "Player 2 Wins the game!!!"
+      stop = true
+    }
+}
+
+function initiateWar() {
+  const player1Cards = player1Deck.popMultiple(2)
+  const player2Cards = player2Deck.popMultiple(2)
+
+  player2Cards.forEach(function(card) {
+    player2CardSlot.appendChild(card.getHTML());
+  });
+  
+  player1Cards.forEach(function(card) {
+    player1CardSlot.appendChild(card.getHTML());
+  });
+  
+  const player1LastCard = player1Cards[player1Cards.length - 1]
+  const player2LastCard = player2Cards[player2Cards.length - 1]
+
+  if (player2LastCard && player1LastCard) {
+    if (isRoundWinner(player2LastCard, player1LastCard)) {
+      text.innerText = "Player 2 wins the War!!"
+      layer2Deck.push(...player2Cards);
+        player2Deck.push(...player1Cards);
+      } else if (isRoundWinner(player1LastCard, player2LastCard)) {
+        text.innerText = "Player 1 Wins the War!";
+        player1Deck.push(...player2Cards);
+        player1Deck.push(...player1Cards);
+      } else {
+        text.innerText = "Another War!";
+        initiateWar();
+      }
+    }
+  }
+  
+  Deck.prototype.popMultiple = function (count) {
+    return Array.from({ length: count }, () => this.pop()).filter(Boolean);
+  };
+
+function updateDeckCount() {
+  player1DeckElement.innerText = player1Deck.numberOfCards; // Updated variable name
+  player2DeckElement.innerText = player2Deck.numberOfCards;
+}
+
+function isRoundWinner(cardOne, cardTwo) {
+  return CARD_VALUE_MAP[cardOne.value] > CARD_VALUE_MAP[cardTwo.value];
+}
+
+function isGameOver(deck) {
+  return deck.numberOfCards === 0;
 }
