@@ -28,6 +28,19 @@ body {
   user-select: none;
 }
 
+.player {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.player span {
+  font-weight: bold;
+  font-size: 36px;
+  color: black;
+}
+
 .player1-deck {
   background-color: blue;
 }
@@ -36,19 +49,19 @@ body {
   background-color: grey;
 }
 
-,text {
+.text {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 32px;
-  }
+}
 
-  .card {
+.card {
   position: relative;
   height: 112px;
   width: 64px;
-  border: 1ps solid black;
+  border: 1px solid black; /* Fixed typo here */
   background-color: white;
   border-radius: 8px;
   display: flex;
@@ -56,29 +69,40 @@ body {
   justify-content: center;
   align-items: center;
   font-size: 64px;
-  }
+}
 
-  .card.red {
-    color: red;
-  }
+.card.red {
+  color: red;
+}
 
-  .card.black {
-    color: black
-  }
+.card.black {
+  color: black;
+}
 
-  .card::before,
-  .card::after {
-    position: absolute;
-    content: attr(data-value);
-    font-size: 16px;
-  }
+.card::before,
+.card::after {
+  position: absolute;
+  content: attr(data-value);
+  font-size: 16px;
+}
 
-  .card::before {
-    top: 8px;
-    left: 8px;
-  }
+.card::before {
+  top: 8px;
+  left: 8px;
+}
 
-  .card::after {
-    top: 8px;
-    left: 8px
-  }
+.card::after {
+  top: 8px;
+  left: 8px;
+}
+
+.reset-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #000000; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
