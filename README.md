@@ -5,7 +5,7 @@
 ![Alt text](<Screenshot 2024-01-04 at 6.57.00 PM.png>)
 
 ## Deployment Link
-### https://smb-war-card-game.surge.sh/
+### https://smb-wargame.surge.sh/ 
 
 ## Planning Materials
 ### https://docs.google.com/document/d/1lKw-ahqdDMxQPfA4SQpOahgNRs5KdxxPE7LPtv7Cz8I/edit?usp=sharing
